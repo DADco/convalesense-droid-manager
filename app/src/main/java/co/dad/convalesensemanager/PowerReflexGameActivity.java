@@ -1,23 +1,16 @@
 package co.dad.convalesensemanager;
 
-import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,15 +28,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ArmStrengthGameActivity extends GameActivity {
+public class PowerReflexGameActivity extends GameActivity {
 
     int nbClouds;
 
-    @BindView(R.id.cloud_container)
-    FrameLayout cloudContainer;
-
-    @BindView(R.id.balloon)
-    ImageView balloon;
+    @BindView(R.id.balloon_container)
+    FrameLayout balloonContainer;
 
     @BindView(R.id.instruction)
     TextView instruction;
@@ -51,7 +41,7 @@ public class ArmStrengthGameActivity extends GameActivity {
     @BindView(R.id.success_overlay)
     RelativeLayout successOverlay;
 
-    List<ImageView> clouds = new ArrayList<>();
+    List<ImageView> balloons = new ArrayList<>();
     Result result = new Result();
     private int execiceId;
     private MediaPlayer m;
@@ -59,20 +49,20 @@ public class ArmStrengthGameActivity extends GameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_arm_strength_game);
+        setContentView(R.layout.activity_power_reflex_game);
 
         ButterKnife.bind(this);
 
         nbClouds = getIntent().getIntExtra("repetition", 0);
         execiceId = getIntent().getIntExtra("exerciceId", 0);
 
-        ViewTreeObserver vto = cloudContainer.getViewTreeObserver();
+        ViewTreeObserver vto = balloonContainer.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                cloudContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                balloonContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 try {
-                    generateClouds();
+                    generateBalloons();
 
                     result.setStartTime(Calendar.getInstance().getTime());
 
@@ -83,49 +73,33 @@ public class ArmStrengthGameActivity extends GameActivity {
         });
     }
 
-    private void generateClouds() {
+    private void generateBalloons() {
 
         for (int i = 0; i < nbClouds; i++) {
 
-            ImageView cloud = new ImageView(this);
-
-            Random r = new Random();
-            int min = 1;
-            int max = 5;
-            int cloudId = r.nextInt(max-min) + min;
-            switch (cloudId) {
-                case 1:
-                    cloud.setImageDrawable(getResources().getDrawable(R.drawable.cloud_1));
-                    break;
-                case 2:
-                    cloud.setImageDrawable(getResources().getDrawable(R.drawable.cloud_2));
-                    break;
-                case 3:
-                    cloud.setImageDrawable(getResources().getDrawable(R.drawable.cloud_3));
-                    break;
-                case 4:
-                    cloud.setImageDrawable(getResources().getDrawable(R.drawable.cloud_4));
-                    break;
-                case 5:
-                    cloud.setImageDrawable(getResources().getDrawable(R.drawable.cloud_5));
-                    break;
-            }
+            ImageView balloon = new ImageView(this);
+            balloon.setImageDrawable(getResources().getDrawable(R.drawable.balloon_icon));
 
             Random rMargin = new Random();
             int minMargin = 0;
-            int maxMargin = 500;
-            int cloudMargin = rMargin.nextInt(maxMargin-minMargin) + minMargin;
+            int maxMargin = balloonContainer.getHeight() - balloon.getDrawable().getIntrinsicHeight();
+            int cloudMarginTop = rMargin.nextInt(maxMargin-minMargin) + minMargin;
 
-            cloud.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+            minMargin = 0;
+            maxMargin = balloonContainer.getWidth() - balloon.getDrawable().getIntrinsicWidth();
+            int cloudMarginLeft = rMargin.nextInt(maxMargin-minMargin) + minMargin;
+
+            balloon.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                     FrameLayout.LayoutParams.WRAP_CONTENT));
 
-            cloudContainer.addView(cloud);
-            ((FrameLayout.LayoutParams)cloud.getLayoutParams()).topMargin = cloudMargin;
+            balloonContainer.addView(balloon);
+            ((FrameLayout.LayoutParams)balloon.getLayoutParams()).topMargin = cloudMarginTop;
+            ((FrameLayout.LayoutParams)balloon.getLayoutParams()).leftMargin = cloudMarginLeft;
 
-            TranslateAnimation translateAnimation = new TranslateAnimation(- cloud.getDrawable().getIntrinsicWidth() / 2,cloudContainer.getWidth() - cloud.getDrawable().getIntrinsicWidth() / 2,cloudMargin,0);
+            TranslateAnimation translateAnimation = new TranslateAnimation(0,0,-50,50);
             Random rDuration = new Random();
-            int minDuration = 5000;
-            int maxDuration = 10000;
+            int minDuration = 500;
+            int maxDuration = 1000;
             int cloudDuration = rDuration.nextInt(maxDuration-minDuration) + minDuration;
 
             translateAnimation.setDuration(cloudDuration);
@@ -133,9 +107,9 @@ public class ArmStrengthGameActivity extends GameActivity {
             translateAnimation.setRepeatMode(Animation.REVERSE);
             translateAnimation.setFillAfter(true);
 
-            cloud.startAnimation(translateAnimation);
+            balloon.startAnimation(translateAnimation);
 
-            clouds.add(cloud);
+            balloons.add(balloon);
 
         }
 
@@ -144,17 +118,19 @@ public class ArmStrengthGameActivity extends GameActivity {
     @Override
     public void onNewData(int count) {
 
-        if (clouds.size() > 0) {
+        if (balloons.size() > 0) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        ImageView cloud = clouds.get(clouds.size() - 1);
+                        ImageView balloon = balloons.get(balloons.size() - 1);
+
+                        balloon.setImageDrawable(getResources().getDrawable(R.drawable.balloon_boom_icon));
 
                         Animation disappearAnimation = new AlphaAnimation(1f, 0f);
                         disappearAnimation.setDuration(500);
                         disappearAnimation.setFillAfter(true);
-                        cloud.setAnimation(disappearAnimation);
+                        balloon.setAnimation(disappearAnimation);
                         disappearAnimation.start();
 
                         new Thread(new Runnable() {
@@ -165,10 +141,9 @@ public class ArmStrengthGameActivity extends GameActivity {
                         }).start();
 
 
-                        clouds.remove(cloud);
+                        balloons.remove(balloon);
 
-                        if (clouds.size() == 0) {
-                            balloon.setVisibility(View.VISIBLE);
+                        if (balloons.size() == 0) {
 
                             new Thread(new Runnable() {
                                 @Override
@@ -221,7 +196,7 @@ public class ArmStrengthGameActivity extends GameActivity {
         try {
             MediaPlayer m = new MediaPlayer();
 
-            AssetFileDescriptor descriptor = getAssets().openFd("whoosh.wav");
+            AssetFileDescriptor descriptor = getAssets().openFd("balloon_pop.wav");
             m.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
             descriptor.close();
 

@@ -22,6 +22,10 @@ public class Exercise {
     @Expose
     private String typeOfExercise;
 
+    @SerializedName("guidelines")
+    @Expose
+    private String guideline;
+
     @SerializedName("repetitions")
     @Expose
     private Integer repetitions;
@@ -31,6 +35,11 @@ public class Exercise {
     @SerializedName("distance")
     @Expose
     private Double distance;
+
+    @SerializedName("weight")
+    @Expose
+    private Double weight;
+
     @SerializedName("score")
     @Expose
     private Object score;
@@ -105,5 +114,21 @@ public class Exercise {
 
     public void setRepetitions(Integer repetitions) {
         this.repetitions = repetitions;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public String getGuideline() {
+        return guideline;
+    }
+
+    public void setGuideline(String guideline) {
+        this.guideline = guideline;
     }
 }

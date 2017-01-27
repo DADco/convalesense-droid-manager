@@ -14,7 +14,7 @@ public class ConvalesenseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/LakkiReddy-Regular.ttf")
+                //.setDefaultFontPath("fonts/LakkiReddy-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );

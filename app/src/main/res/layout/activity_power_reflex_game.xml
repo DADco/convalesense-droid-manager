@@ -17,33 +17,15 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         fontPath="fonts/LakkiReddy-Regular.ttf"
-        android:text="@string/clear_those_clouds"/>
-
-    <ImageView
-        android:id="@+id/city"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_above="@id/instruction"
-        android:scaleType="fitCenter"
-        android:src="@drawable/city"/>
+        android:text="@string/punch_to_pop_the_balloons"/>
 
     <FrameLayout
-        android:id="@+id/cloud_container"
+        android:id="@+id/balloon_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
     </FrameLayout>
-
-    <ImageView
-        android:id="@+id/balloon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/balloon"
-        android:visibility="invisible"/>
 
     <RelativeLayout
         android:id="@+id/success_overlay"

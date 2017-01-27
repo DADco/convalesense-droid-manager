@@ -27,7 +27,8 @@
                 android:textColor="#4E5974"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:gravity="center"/>
+                android:gravity="center"
+                fontPath="fonts/LakkiReddy-Regular.ttf"/>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>

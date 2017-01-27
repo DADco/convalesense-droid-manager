@@ -43,6 +43,8 @@ public class GameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             ((ExerciseViewHolder)holder).icon.setImageDrawable(((ExerciseViewHolder)holder).icon.getResources().getDrawable(R.drawable.balloon_icon));
         }
 
+        ((ExerciseViewHolder)holder).gameExtras.setText(exercice.getGuideline());
+
     }
 
     @Override
@@ -70,6 +72,9 @@ public class GameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         @BindView(R.id.game_description)
         TextView gameDescription;
+
+        @BindView(R.id.game_extras)
+        TextView gameExtras;
 
         @BindView(R.id.icon)
         ImageView icon;

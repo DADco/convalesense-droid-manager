@@ -41,6 +41,7 @@ import co.dad.convalesensemanager.model.Plan;
 import co.lujun.lmbluetoothsdk.BluetoothController;
 import co.lujun.lmbluetoothsdk.base.BluetoothListener;
 import co.lujun.lmbluetoothsdk.base.State;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class GamesActivity extends AppCompatActivity {
@@ -63,6 +64,11 @@ public class GamesActivity extends AppCompatActivity {
 
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games);
@@ -82,7 +88,8 @@ public class GamesActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 selectedExercice = adapter.getExercises().get(position);
 
-                if (selectedExercice.getId() == 1) {
+                if (selectedExercice.getName().equals("Arm Strength")
+                        || selectedExercice.getName().equals("Power Reflex")) {
 
                     progressDialog = new ProgressDialog(GamesActivity.this);
                     progressDialog.setIndeterminate(true);
@@ -212,16 +219,22 @@ public class GamesActivity extends AppCompatActivity {
     private void gotoGame() {
 
         int exerciceId = selectedExercice.getId();
-        mBTController.write(String.valueOf(exerciceId).getBytes());
+        mBTController.write(selectedExercice.getName().getBytes());
 
-        switch (exerciceId) {
-            case 1:
-                Intent intent = new Intent(this, ArmStrengthGameActivity.class);
-                intent.putExtra("repetition", selectedExercice.getRepetitions());
-                intent.putExtra("exerciceId", exerciceId);
-                startActivity(intent);
-                break;
+        if (selectedExercice.getName().equals("Arm Strength")) {
+            Intent intent = new Intent(this, ArmStrengthGameActivity.class);
+            intent.putExtra("repetition", selectedExercice.getRepetitions());
+            intent.putExtra("exerciceId", exerciceId);
+            startActivity(intent);
+
+        } else if (selectedExercice.getName().equals("Power Reflex")) {
+            Intent intent = new Intent(this, PowerReflexGameActivity.class);
+            intent.putExtra("repetition", selectedExercice.getRepetitions());
+            intent.putExtra("exerciceId", exerciceId);
+            startActivity(intent);
         }
+
+
     }
 
 
