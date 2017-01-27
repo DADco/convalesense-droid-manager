@@ -45,6 +45,9 @@ public class ArmStrengthGameActivity extends GameActivity {
     @BindView(R.id.balloon)
     ImageView balloon;
 
+    @BindView(R.id.sun)
+    ImageView sun;
+
     @BindView(R.id.instruction)
     TextView instruction;
 
@@ -168,7 +171,16 @@ public class ArmStrengthGameActivity extends GameActivity {
                         clouds.remove(cloud);
 
                         if (clouds.size() == 0) {
+                            sun.setVisibility(View.VISIBLE);
                             balloon.setVisibility(View.VISIBLE);
+
+                            TranslateAnimation translateAnimation = new TranslateAnimation(0,cloudContainer.getWidth() - balloon.getDrawable().getIntrinsicWidth(),0 ,-100);
+                            translateAnimation.setDuration(6000);
+                            translateAnimation.setRepeatCount(Animation.INFINITE);
+                            translateAnimation.setRepeatMode(Animation.REVERSE);
+                            translateAnimation.setFillAfter(true);
+
+                            balloon.startAnimation(translateAnimation);
 
                             new Thread(new Runnable() {
                                 @Override
