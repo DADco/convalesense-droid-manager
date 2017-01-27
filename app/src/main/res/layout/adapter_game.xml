@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardCornerRadius="4dp"
     card_view:contentPadding="16dp">
 
@@ -14,10 +15,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitStart"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/cloud_2"/>
+
         <TextView
             android:id="@+id/game_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/icon"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/game_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/icon"
+            android:layout_below="@id/game_name"/>
 
     </RelativeLayout>
 

@@ -21,9 +21,10 @@ public class Exercise {
     @SerializedName("type_of_exercise")
     @Expose
     private String typeOfExercise;
-    @SerializedName("number_of_reps")
+
+    @SerializedName("repetitions")
     @Expose
-    private Integer numberOfReps;
+    private Integer repetitions;
     @SerializedName("duration")
     @Expose
     private Object duration;
@@ -74,14 +75,6 @@ public class Exercise {
         this.typeOfExercise = typeOfExercise;
     }
 
-    public Integer getNumberOfReps() {
-        return numberOfReps;
-    }
-
-    public void setNumberOfReps(Integer numberOfReps) {
-        this.numberOfReps = numberOfReps;
-    }
-
     public Object getDuration() {
         return duration;
     }
@@ -106,4 +99,11 @@ public class Exercise {
         this.score = score;
     }
 
+    public Integer getRepetitions() {
+        return repetitions;
+    }
+
+    public void setRepetitions(Integer repetitions) {
+        this.repetitions = repetitions;
+    }
 }

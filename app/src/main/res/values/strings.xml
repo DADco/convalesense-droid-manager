@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ConvalesenseManager</string>
+    <string name="clear_those_clouds">Clear those clouds!</string>
+    <string name="main_title">Convalesense</string>
 </resources>

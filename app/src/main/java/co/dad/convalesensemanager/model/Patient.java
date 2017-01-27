@@ -15,6 +15,9 @@ public class Patient {
     @SerializedName("username")
     @Expose
     private String username;
+    @SerializedName("name")
+    @Expose
+    private String name;
     @SerializedName("type")
     @Expose
     private String type;
@@ -51,4 +54,11 @@ public class Patient {
         this.type = type;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

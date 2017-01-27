@@ -15,10 +15,12 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -37,6 +39,13 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.plan_list)
     RecyclerView planList;
+
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private PlanAdapter adapter;
 
     @Override
@@ -45,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.main_title));
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -62,13 +74,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
 
-
-        // TODO REMOVE
-        Intent intent = new Intent(MainActivity.this, GamesActivity.class);
-        intent.putExtra("planId", 3);
-
-        startActivity(intent);
-        // TODO END REMOVE
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchPlan();
+            }
+        });
 
     }
 
@@ -76,7 +87,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        /*new AsyncTask<Void, Void, List<Plan>>() {
+        fetchPlan();
+    }
+
+    private void fetchPlan() {
+
+        refreshLayout.setRefreshing(true);
+
+        new AsyncTask<Void, Void, List<Plan>>() {
 
             @Override
             protected List<Plan> doInBackground(Void... voids) {
@@ -93,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 adapter = new PlanAdapter();
                 adapter.setPlans(plans);
                 planList.setAdapter(adapter);
+                refreshLayout.setRefreshing(false);
             }
-        }.execute();*/
+        }.execute();
     }
 }

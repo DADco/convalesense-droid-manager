@@ -1,6 +1,7 @@
 package co.dad.convalesensemanager;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -13,8 +14,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,11 +51,15 @@ public class GamesActivity extends AppCompatActivity {
     @BindView(R.id.games_recycler)
     RecyclerView gamesList;
 
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
+
     private int planId;
 
     private GameAdapter adapter;
     private Exercise selectedExercice;
     private BluetoothController mBTController;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -64,6 +71,7 @@ public class GamesActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        setTitle(getString(R.string.main_title));
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -73,12 +81,31 @@ public class GamesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 selectedExercice = adapter.getExercises().get(position);
-                pairDevices();
+
+                if (selectedExercice.getId() == 1) {
+
+                    progressDialog = new ProgressDialog(GamesActivity.this);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Connecting to sensor");
+                    progressDialog.show();
+
+                    pairDevices();
+                } else {
+                    Toast.makeText(GamesActivity.this, "Not available yet", Toast.LENGTH_SHORT).show();
+                }
+
             }
         }));
 
-        //BluetoothAdapter.getDefaultAdapter().setName(BT_NAME);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchExercises();
+            }
+        });
+    }
 
+    private void initBluetooth() {
         mBTController = BluetoothController.getInstance().build(this);
         mBTController.setBluetoothListener(new BluetoothListener() {
             @Override
@@ -107,6 +134,12 @@ public class GamesActivity extends AppCompatActivity {
                 if (state == State.STATE_CONNECTED) {
                     gotoGame();
                 }
+
+                if (state != State.STATE_CONNECTING
+                        && progressDialog != null
+                        && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
@@ -120,8 +153,6 @@ public class GamesActivity extends AppCompatActivity {
                 }
             }
         });
-
-        pairDevices();
     }
 
     @Override
@@ -146,7 +177,16 @@ public class GamesActivity extends AppCompatActivity {
 
         selectedExercice = null;
 
-        /*new AsyncTask<Void, Void, Plan>() {
+        initBluetooth();
+
+        fetchExercises();
+    }
+
+    private void fetchExercises() {
+
+        refreshLayout.setRefreshing(true);
+
+        new AsyncTask<Void, Void, Plan>() {
 
             @Override
             protected Plan doInBackground(Void... voids) {
@@ -163,30 +203,23 @@ public class GamesActivity extends AppCompatActivity {
                 adapter = new GameAdapter();
                 adapter.setExercises(plan.getExercises());
                 gamesList.setAdapter(adapter);
+                refreshLayout.setRefreshing(false);
             }
 
-        }.execute();*/
+        }.execute();
     }
 
     private void gotoGame() {
 
-
-
-        //int exerciceId = selectedExercice.getId();
-        int exerciceId = 1;
+        int exerciceId = selectedExercice.getId();
         mBTController.write(String.valueOf(exerciceId).getBytes());
+
         switch (exerciceId) {
             case 1:
                 Intent intent = new Intent(this, ArmStrengthGameActivity.class);
-                intent.putExtra("repetition", 20);
-                intent.putExtra("gameId", exerciceId);
+                intent.putExtra("repetition", selectedExercice.getRepetitions());
+                intent.putExtra("exerciceId", exerciceId);
                 startActivity(intent);
-                break;
-            case 2:
-
-                break;
-            case 3:
-
                 break;
         }
     }

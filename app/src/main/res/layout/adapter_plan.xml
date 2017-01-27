@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardCornerRadius="4dp"
     card_view:contentPadding="16dp">
 
@@ -14,56 +15,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/profile"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/charlie_profile"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitCenter"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="Corey"/>
+
+
         <TextView
             android:id="@+id/start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/name"
             android:text="1/1/11"/>
 
         <TextView
             android:id="@+id/end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/start_date"
-            android:layout_marginLeft="8dp"
+            android:layout_below="@id/start_date"
             android:text="1/3/11"/>
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Corey"/>
 
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/start_date"
-            android:text="Description blab bla blabla"/>
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/end_date"/>
 
         <TextView
             android:id="@+id/session_per_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/description"
-            android:text="2 sessions per day"/>
-
-        <TextView
-            android:id="@+id/number_game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/description"
-            android:layout_toRightOf="@id/session_per_day"
-            android:layout_marginLeft="8dp"
-            android:text="2 games"/>
-
-        <TextView
-            android:id="@+id/goals"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/session_per_day"
-            android:text="Today : 2"/>
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/description"/>
 
     </RelativeLayout>
 

@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -32,6 +33,15 @@ public class GameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         Exercise exercice = exercises.get(position);
 
         ((ExerciseViewHolder)holder).gameName.setText(exercice.getName());
+        ((ExerciseViewHolder)holder).gameDescription.setText(exercice.getDescription());
+
+        if (exercice.getName().equals("Arm Strength")) {
+            ((ExerciseViewHolder)holder).icon.setImageDrawable(((ExerciseViewHolder)holder).icon.getResources().getDrawable(R.drawable.cloud_icon));
+        } else if (exercice.getName().equals("Finger Strength")) {
+            ((ExerciseViewHolder)holder).icon.setImageDrawable(((ExerciseViewHolder)holder).icon.getResources().getDrawable(R.drawable.rain_icon));
+        } else if (exercice.getName().equals("Power Reflex")) {
+            ((ExerciseViewHolder)holder).icon.setImageDrawable(((ExerciseViewHolder)holder).icon.getResources().getDrawable(R.drawable.balloon_icon));
+        }
 
     }
 
@@ -57,6 +67,12 @@ public class GameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         @BindView(R.id.game_name)
         TextView gameName;
+
+        @BindView(R.id.game_description)
+        TextView gameDescription;
+
+        @BindView(R.id.icon)
+        ImageView icon;
 
         public ExerciseViewHolder(View view) {
             super(view);

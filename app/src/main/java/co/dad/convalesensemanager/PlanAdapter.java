@@ -32,19 +32,19 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         Plan plan = plans.get(position);
 
-        ((PlanViewHolder)holder).patientName.setText(plan.getPatient().getUsername());
+        ((PlanViewHolder)holder).patientName.setText(plan.getPatient().getName()+"'s Plan");
+        ((PlanViewHolder)holder).description.setText(plan.getDescription());
 
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd / MM / yyyy");
-            ((PlanViewHolder)holder).startDate.setText(sdf.format(plan.getStart()));
-            ((PlanViewHolder)holder).endDate.setText(sdf.format(plan.getEnd()));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            ((PlanViewHolder)holder).startDate.setText("Start: "+sdf.format(plan.getStart()));
+            ((PlanViewHolder)holder).endDate.setText("Complete: "+sdf.format(plan.getEnd()));
 
         } catch (Exception e) {
 
         }
 
-        ((PlanViewHolder)holder).numberOfGames.setText(String.valueOf(plan.getExercises().size()));
-
+        ((PlanViewHolder)holder).sessionPerDay.setText("Exercises per day: "+String.valueOf(plan.getExercises().size()));
 
     }
 
@@ -80,14 +80,8 @@ public class PlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         @BindView(R.id.description)
         TextView description;
 
-        @BindView(R.id.goals)
-        TextView goalsOfTheDay;
-
         @BindView(R.id.session_per_day)
         TextView sessionPerDay;
-
-        @BindView(R.id.number_game)
-        TextView numberOfGames;
 
         public PlanViewHolder(View view) {
             super(view);
